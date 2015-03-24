@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Score_board extends CI_Controller {
+class Scoreboard extends CI_Controller {
 
 	function __construct(){
 		parent::__construct();
@@ -149,9 +149,12 @@ class Score_board extends CI_Controller {
 					$_FILES['userfile']['error']= $files['userfile']['error'][$i];
 					$_FILES['userfile']['size']= $files['userfile']['size'][$i];    
 					$this->upload->initialize($this->set_upload_options());
-					if(!$this->upload->do_upload())	print_r($this->upload->display_errors());
-					else	
-					$this->m->insert_new_job_res($sc_id,'file://'.$this->upload->data()['full_path']);
+					if(!$this->upload->do_upload())	{
+						print_r($this->upload->display_errors());
+					}else{	
+						$data=$this->upload->data();
+						$this->m->insert_new_job_res($sc_id,'file://'.$data['full_path']);
+					}
 				}
 			}
 		}
@@ -195,7 +198,7 @@ class Score_board extends CI_Controller {
 				$this->save_post_job($target_id);
 			}
 			exit;
-			redirect('score_board/change_field/sboard/'.$target_id);
+			redirect('scoreboard/change_field/sboard/'.$target_id);
 		}
 		$q=$this->m->get_all_job($id);//get_all_job([parameters])
 		$data['result']=$q;
@@ -213,7 +216,7 @@ class Score_board extends CI_Controller {
 		//print_r($_POST);
 		$target_id=$this->flash()->flashdata('id');
 		$this->m->save_post_period($target_id);
-		redirect('score_board/targets');
+		redirect('scoreboard/targets');
 	}
 	
 	function save_post_target($target_id=0){
@@ -222,7 +225,7 @@ class Score_board extends CI_Controller {
 			$this->m->save_post_target($name,$target_id);
 		}else{echo 'error';exit;}
 		
-		redirect('score_board/targets/'.$target_id);
+		redirect('scoreboard/targets/'.$target_id);
 	}
 	
 	function save_post_job($target_id){
@@ -242,7 +245,7 @@ class Score_board extends CI_Controller {
 		 $this->create_new_job($target_id,$job_data);
 
 		}else{echo 'error';exit;}
-		redirect('score_board/targets/'.$target_id);
+		redirect('scoreboard/targets/'.$target_id);
 		
 	}
 	
@@ -279,7 +282,7 @@ class Score_board extends CI_Controller {
 		foreach($table as $table){
 			$this->m->reset_table($table);
 		}
-		redirect('score_board');
+		redirect('scoreboard');
 	}	
 	
 	function edit_targets(){
