@@ -3,8 +3,8 @@ if (!isset($result)) exit();
 $n=1;
 $o=0;
 ?>
- <?= form_open('score_board/edit_targets','class="form_target"')?>
-<table border=0 class='table'>
+ <?= form_open('scoreboard/edit_targets','class="form_target"')?>
+<table border=0 class='table' width=100%>
 <?php
 foreach($result as $r){
  $targetId=$r->tId;
@@ -21,28 +21,28 @@ foreach($result as $r){
 		 $rowCount=count($tgl);
 	?>
 	 <tr>
-	  <th colspan=2>Fokus</th>
-	  <td colspan="<?=$rowCount+2?>">: <?=strtoupper($targetName)
-	  	.anchor('score_board/change_field/tname/'.$ID,'<span class="glyphicon glyphicon-pencil"></span>','class="btn btn-default" style="margin-left:10px;"')
+	  <th class="td-kecil" colspan=2>Fokus</th>
+	  <td class='td-kecil' colspan="<?=$rowCount+3?>"> <?=strtoupper($targetName)
+	  	.anchor('scoreboard/change_field/tname/'.$ID,'<span class="glyphicon glyphicon-pencil">Edit</span>','class="btn btn-default" style="margin-left:10px;"')
 	  	?></td>
 	 </tr>
 	 <tr>
-	  <th colspan=2>Periode</th>
-	  <td colspan="<?=$rowCount+2?>">: <?=$period.anchor('score_board/change_field/period/'
-	  	.$ID,'<span class="glyphicon glyphicon-pencil"></span>','class="btn btn-default" style="margin-left:10px;"')?></td>
+	  <th class="td-kecil" colspan=2>Periode</th>
+	  <td class='td-kecil' colspan="<?=$rowCount+3?>"> <?=$period.anchor('scoreboard/change_field/period/'
+	  	.$ID,'<span class="glyphicon glyphicon-pencil">Edit</span>','class="btn btn-default" style="margin-left:10px;"')?></td>
 	 </tr>
 	 <tr>
-	  <th colspan=2>Scoreboard<?=anchor('score_board/change_field/sboard/'
-	  	.$ID,'<span class="glyphicon glyphicon-pencil"></span>','class="btn btn-default" style="margin-left:10px;"')
+	  <th class="td-kecil" colspan=2>Scoreboard<?=anchor('scoreboard/change_field/sboard/'
+	  	.$ID,'<span class="glyphicon glyphicon-pencil">Edit</span>','class="btn btn-default" style="margin-left:10px;"')
 	  	?></th>
-	  <td></td>
+	  <td class='td-kecil' colspan="<?=$rowCount+3?>"></td>
 	 </tr>
-	 <tr bgcolor='#C0C0C0'>
-	  <th rowspan=2 colspan=2>Lead</th>
-	  <th rowspan=2 colspan=2>Target</th>
-	  <th colspan="<?=$rowCount+2?>" class='text-center' style='width:50%'>Tanggal</th>
+	 <tr style='background:#91A1F0'>
+	  <th class="td-kecil" rowspan=2 colspan=2>Lead</th>
+	  <th class="td-kecil" rowspan=2 colspan=2>Target</th>
+	  <th class="td-kecil" colspan="<?=$rowCount+2?>" class='text-center' style='width:50%'>Tanggal</th>
 	 </tr>
-	 <tr bgcolor='#C0C0C0' colspan=2>
+	 <tr style='background:#91A1F0' colspan=2>
 	<?php
 		$nn=0;
 		foreach($tgl as $t){
@@ -53,7 +53,7 @@ foreach($result as $r){
 		 
 		  if($nn%2==1) $bg='#C0C0C0'; else $bg='#fff'; 
 		  if($date==date('d/m')){$bg='red';$now=' (Now)';}else$now='';
-		 echo "<td style='font-size:10px;padding:2px;font-weight:bold' bgcolor='".$bg."'>".$d.$now."</td>";
+		 echo "<td class='td-kecil' style='font-size:10px;padding:2px;font-weight:bold' bgcolor='".$bg."'>".$d.$now."</td>";
 		 $nn++;
 		}
 	echo "</tr>";
@@ -63,9 +63,9 @@ if($jobId != ''){
 	 ?>
 
 	 <tr>
-	  <td colspan=1><?php if($jobName != 'NotSet(Empty)')echo $jobName;else echo '<font color="red">'.$jobName.'</font>'//.anchor('score_board/change_field/jname/'.$jobId.'/'.$ID,'&nbsp;<span class="glyphicon glyphicon-pencil"></span>')?></td>
-	  <td><?=anchor('score_board/delete_job/'.$jobId.'/'.$targetId,'<i class="glyphicon glyphicon-trash"></i>')?></td>
-	  <td style="padding:0px;">
+	  <td class='td-kecil' colspan=1><?php if($jobName != 'NotSet(Empty)')echo $jobName;else echo '<font color="red">'.$jobName.'</font>'//.anchor('scoreboard/change_field/jname/'.$jobId.'/'.$ID,'&nbsp;<span class="glyphicon glyphicon-pencil"></span>')?></td>
+	  <td class='td-kecil'><?=anchor('scoreboard/delete_job/'.$jobId.'/'.$targetId,'<i class="glyphicon glyphicon-trash">Delete</i>')?></td>
+	  <td class='td-kecil' style="padding:0px;">
 	  	<div class='row' style='margin-right:0px;'>
 			  <div class='col-md-2' style='width:90%;float:right;background:#fff;' >
 			   <span id="<?='data'.$o?>"></span><br/>
@@ -73,7 +73,7 @@ if($jobId != ''){
 			  </div> 
 		</div>
 	  </td>
-	  <td id="<?='ico'.$o?>">.</td>
+	  <td class='td-kecil' id="<?='ico'.$o?>">.</td>
 	<?php
 	$job=$c->getJobRes($jobId);
 	$nn=0;
@@ -83,13 +83,13 @@ if($jobId != ''){
 	  foreach($job as $r){
 	  	$count=$r->count;
 		$sc_id=$r->sc_id;
-	  	$total=$c->get_total_contents($r->ID);
+	  	$total=$c->get_total_contents($sc_id);
 	  	$sum += $total;
 	  	$total_count += $count;
 	  	$date=$r->date;
 		if($nn%2==1) $bg='#C0C0C0'; else $bg='#fff'; 
 		//if($date==date('Y-m-d'))$bg='#F95959';
-		echo "<td style='font-size:".$fontsize."px;padding:0px;' bgcolor='".$bg."'>
+		echo "<td class='td-kecil' style='font-size:".$fontsize."px;padding:0px;' bgcolor='".$bg."'>
 			<div class='row' style='margin-right: 0px;'>
 			  <div class='col-md-8' style='width:94%;float:right;background:#A8FF7D'>".
 			  form_checkbox('check[]',$sc_id).br().'<i>'.$count.'</i>' 
@@ -97,15 +97,15 @@ if($jobId != ''){
 			  <div class='col-md-8' style='width:94%;float:right;background:#70C7B6'>".
 			  $total
 			  ."</div> 
-			  ".anchor(site_url('score_board/edit_job/'.$sc_id.'/'.$jobId),'laporan','class="col-md-8"')."
+			  ".anchor(site_url('scoreboard/edit_job/'.$sc_id.'/'.$jobId),'View','class="col-md-8"')."
 			</div>
 		</td>";
 		$nn++;
 	  }
 
 	?>
-	<td><?='<a href="#" onclick="submit_form();"><i class="glyphicon glyphicon-pencil"></i></a>'?></td>
-	<script src="<?=base_url('assets/js/jquery.js')?>"></script>
+	<td class='td-kecil'><?='<a href="#" onclick="submit_form();"><i class="glyphicon glyphicon-pencil">Edit</i></a>'?></td>
+	<script src="<?=base_url('assets/js/jquery-1.7.min.js')?>"></script>
 	<script type="text/javascript">
 	$(document).ready(function(){
 		var sum="<?=$sum?>";

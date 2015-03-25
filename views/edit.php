@@ -1,5 +1,5 @@
-<?=form_open_multipart('score_board/update_score')?>
-	<table class='table'>
+<?=form_open_multipart('scoreboard/update_score')?>
+	<table class='table' style="width:60%;margin-left:20%">
 	<?php
 	$uId='';
  	$jId='';
@@ -29,25 +29,27 @@
 	}else exit;
 	?>
 	 <tr>
-	  <td>Nama Target</td>
-	  <td><?=strtoupper($tname)?></td>
-	  <td></td>
+	  <td class='td-head' colspan=3>EDIT HASIL</td>
 	 </tr>
 	 <tr>
-	  <td>Nama Job</td>
-	  <td colspan=2><?=strtoupper($jname)?></td>
+	  <th class='td-kecil'>Nama Target</th>
+	  <td class='td-kecil' colspan=2><?=strtoupper($tname)?></td>
 	 </tr>
 	 <tr>
-	  <td>Tanggal</td>
-	  <td colspan=2><?php 
+	  <th class='td-kecil'>Nama Job</th>
+	  <td class='td-kecil' colspan=2><?=strtoupper($jname)?></td>
+	 </tr>
+	 <tr>
+	  <th class='td-kecil'>Tanggal</th>
+	  <td class='td-kecil' colspan=2><?php 
 	  	$date=new DateTime($date);
 	  	$date= date_format($date,'d-M-Y');
 	  	echo $date;
 	  	?></td>
 	 </tr>
 	 <tr>
-	  <td>Results</td>
-	  <td>
+	  <td class='td-kecil' rowspan=3>Results</td>
+	  <td class='td-kecil'>
 	  	<div class="row" id='row1'>
 	  <?php
 	  $content='';
@@ -65,11 +67,10 @@
 	  ?>
 		</div>
 	  </td>
-	  <td></td>
+	  <td class='td-kecil' style="width:50px;">*Jika terdapat url yang sama maka akan dibuang.</td>
 	 </tr>
 	 <tr>
-	  <td></td>
-	  <td>
+	  <td class='td-kecil'>
 	  	<div id='row2'>
 	  <?php
 	  	if(count($url) !== 0 and !empty($url) and $url !== ''){
@@ -101,15 +102,15 @@
 	  ?>
 		</div>
 	  </td>
-	  <td><a class='btn btn-default' onclick='add_itm_upload()'>Add Field</a></td>
+	  <td class='td-kecil'><input type='button' class='btn btn-default' onclick='add_itm_upload()' value='Add Field' /></td>
 	 </tr>
 	 <tr>
-	  <td></td>
-	  <td colspan=2><?=form_submit('submit','Update','class="btn btn-primary"')?></td>
+	  <td class='td-kecil' colspan=2>
+	  		<?=form_submit('submit','Update','class="btn btn-primary"')?>
+	  		<input type='button' value='Cancel' onclick="history.back();" /></td>
 	 </tr>
 	</table>
 <?=form_close()?>
-<script src="<?=base_url('assets/js/jquery.js')?>"></script>
 <script type="text/javascript">
 function add_itm_input() {
     var div = $('<div style="margin:2px;"></div>');

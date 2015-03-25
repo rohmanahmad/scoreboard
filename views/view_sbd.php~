@@ -1,48 +1,44 @@
 <div class="row">
   <div class="col-md-8">
-  	<?=form_open(site_url('score_board/update_score'))?>
-  	<table class='table'>
+  	<?=form_open(site_url('scoreboard/save'))?>
+  	<table class='table' style="margin-left:30%;">
   	 
 			 <tr>
-			  <th colspan=3><center>FOKUS PADA SATU TUJUAN</center></th>
+			  <th colspan=3 class='td-head' style="color:#fff;">FOKUS ANDA</th>
 			 </tr>
 			 <tr>
-			  <td>FOKUS</td>
-			  <td>:</td>
-			  <td><input name='target' type="text" class="form-control" id="exampleInputEmail1" placeholder="Masukkan Fokus Anda"></td>
+			  <td class="td-kecil">FOKUS</td>
+			  <td class="td-kecil">:</td>
+			  <td class="td-kecil"><input name='target' type="text" class="form-control" style='width:100%' id="exampleInputEmail1" placeholder="Masukkan Fokus Anda"></td>
 			 </tr>
 			 <tr>
-			  <td>TANGGAL</td>
-			  <td>:</td>
-			  <td><input name='start' type="date" class="form-control" style='width:30%'> 
+			  <td class="td-kecil">TANGGAL</td>
+			  <td class="td-kecil">:</td>
+			  <td class="td-kecil"><input name='start' type="date" class="form-control" style='width:40%'> 
 			  	<span style="fload:left">-</span> 
-			  	<input name='finish' type="date" class="form-control" style='width:30%' /></td>
+			  	<input name='finish' type="date" class="form-control" style='width:40%' /></td>
 			 </tr>
 			 <tr>
-			  <td>LEAD MEASURE</td>
-			  <td>:</td>
-			  <td>
+			  <td class="td-kecil">LEAD MEASURE</td>
+			  <td class="td-kecil">:</td>
+			  <td class="td-kecil">
 			  	<table id='lead' style="width:100%">
-				  	 <tr>
-				  	  <td>Fokus</td>
-				  	 </tr>
 				  	 
 			  	</table>
 			  	  	
 			  </td>
 			 </tr>
 			 <tr>
-			  <td></td>
+			  <td class="td-kecil"></td>
 			  <td colspan='2'>
 				  	 <input type="submit" class='btn btn-primary' value='simpan' />
-			  		 <a class='btn btn-warning' onclick='add_itm()'>Add</a>
+			  		 <input type='button' class='btn btn-warning' onclick='add_itm()' value='add'>
 		  </td>
 		 </tr>
 	</table>
   	  <?=form_close()?>
   </div>
 </div>
-<script src="<?=base_url('assets/js/jquery.js')?>"></script>
 <script type="text/javascript">
 for (var i=1;i <= 2; i++)
 { 
@@ -51,10 +47,10 @@ for (var i=1;i <= 2; i++)
 
 function add_itm() {
     var tr = $('<tr></tr>');
-    var td = $('<td></td>');
-    var td_f = $('<td></td>');
-    //var td_t = $('<td></td>');
-    var fokus = $("<input type='text' name='job[]' class='form-control' placeholder='fokus'>");
+    var td = $('<td class="td-kecil"></td>');
+    var td_f = $('<td class="td-kecil"></td>');
+    //var td_t = $('<td class="td-kecil"></td>');
+    var fokus = $("<input type='text' name='job[]' class='form-control' placeholder='fokus' style='width:100%'>");
     //var target = $("<input type='text' name='target[]' class='form-control' style='width:50px' placeholder='0'>");
     
      $('#lead').append(tr);

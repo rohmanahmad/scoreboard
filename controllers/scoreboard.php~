@@ -9,12 +9,12 @@ class Scoreboard extends CI_Controller {
 		$this->load->library('encrypt');
 	}
  
-	function header(){
-	 	$this->load->view('main/header');
+	function header($data=array()){
+	 	$this->load->view('main/header',$data);
 	}
 	
 	function get_uId(){
-		return 1;
+		return 16;
 	}
 	
 	function flash(){
@@ -35,8 +35,10 @@ class Scoreboard extends CI_Controller {
 	}
 	
 	function home($data=array()){
+		$data['include_js'] = jquery_js_core() . 
+			'<script src="' .base_url(). 'assets/js/jquery-1.7.min.js"></script>';
 		$this->load->helper('form');
-		$this->header();
+		$this->header($data);
 		$this->load->view('view_sbd',$data);
 	}
 	
@@ -50,7 +52,7 @@ class Scoreboard extends CI_Controller {
 	function save(){
 		$userId=$this->get_uId();
 		$res=$this->m->save($userId);
-		if ($res == 1) redirect('score_board/targets');
+		if ($res == 1) redirect('scoreboard/targets');
 		echo $res;
 		exit;
 	}
@@ -65,16 +67,17 @@ class Scoreboard extends CI_Controller {
 		$data['c']=$this;
 		$this->load->helper('form');
 		$this->load->view('scoreboard',$data);
-		$this->load->view('modal');
 	}
 	
 	function edit_job($scID=0,$job_id=0){
 		$userId=$this->get_uId();
+		$data['include_js'] = jquery_js_core() . 
+			'<script src="' .base_url(). 'assets/js/jquery-1.7.min.js"></script>';
 		$data['flash']=$this->flash();
 		$data['uri']=$this->uri;
 		$this->load->helper('form');
 		$data['res']=$this->m->get_score($scID,$job_id,$userId);
-		$this->header();
+		$this->header($data);
 		$this->load->view('edit',$data);
 	}
 	
@@ -269,12 +272,12 @@ class Scoreboard extends CI_Controller {
 		if(count($q)>0){
 			$this->m->delete_target_packet($id);
 		}
-		redirect('score_board');
+		redirect('scoreboard');
 	}
 	
 	function delete_job($job_id=0,$target_id=0){
 		 $this->m->delete_job($job_id,$target_id);
-		 //redirect('score_board/scoreBoard/'.$target_id);
+		 //redirect('scoreboard/scoreBoard/'.$target_id);
 	}
 	
 	function reset_data($table=''){
@@ -289,7 +292,7 @@ class Scoreboard extends CI_Controller {
 		if(isset($_POST['id'])){
 			//print_r($_POST);
 			$this->m->edit_target();
-			redirect('score_board/targets');
+			redirect('scoreboard/targets');
 		}
 		if(!isset($_POST['check'])){echo 'tidak ada field yang akan di edit!!!';exit;}
 		$post=$this->input->post('check');
