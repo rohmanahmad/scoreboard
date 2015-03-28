@@ -13,6 +13,18 @@ class Score_board_model extends CI_Model{
  	return $this->insert_row($this->pref('targets'),$data,$return);
  }
  
+ function get_current_scoreboard($date,$user_id){
+ 	$this->db->where($this->pref('schedule.date'),$date);
+ 	$this->db->where($this->pref('targets.user_id'),$user_id);
+ 	$this->db->limit(1);
+ 	$this->db->select($this->pref('targets.ID'));
+ 	$this->db->join($this->pref('job'),$this->pref('schedule.job_id').'='.$this->pref('job.ID'),'left');
+ 	$this->db->join($this->pref('targets'),$this->pref('targets.ID').'='.$this->pref('job.target_id'),'left');
+ 	
+ 	$data=$this->db->get($this->pref('schedule'));
+ 	return $data->row();
+ }
+ 
  function insert_new_schedule($data,$return=false){
  	$table=$this->pref('schedule');
  	return $this->insert_row($table,$data,$return);

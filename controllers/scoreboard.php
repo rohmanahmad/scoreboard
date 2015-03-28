@@ -40,9 +40,15 @@ class Scoreboard extends CI_Controller {
 	}
 	
 	function home($data=array()){
+		$user_id=$this->get_uId();
 		$data['include_js'] = jquery_js_core() . 
 			'<script src="' .base_url(). 'assets/js/jquery-1.7.min.js"></script>';
 		$this->load->helper('form');
+		$q_data=$this->m->get_current_scoreboard(date('Y-m-d'),$user_id);
+		if(count($q_data) == 1){
+			$id=$q_data->ID;
+			redirect('scoreboard/scoreBoard/'.$id);
+		}
 		$this->header($data);
 		$this->load->view('view_sbd',$data);
 		$this->load->view('footer',$data);
