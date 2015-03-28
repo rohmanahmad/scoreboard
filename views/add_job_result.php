@@ -1,4 +1,4 @@
-<?=form_open_multipart('scoreboard/update_score')?>
+<?=form_open_multipart()?>
 	<table class='table' style="width:60%;margin-left:20%">
 	<?php
 	$uId='';
@@ -13,18 +13,12 @@
 	$flash->set_flashdata('last_url',$uri->uri_string());
 	if(isset($res)){
 	 if (count($res) == 0) $not_set=true;
-	 $n=1;
 	 foreach($res as $r){
 		 	$uId=$r->uId;
 		 	$tId=$r->tId;
 		 	$jname=$r->jName;
 		 	$date=$r->date;
 		 	$tname=$r->tName;
-		 	$n=2;
-	 	if($n==1){
-	 	}
-	 	$jId[]=$r->jId;
-	 	$url[]=$r->url;
 	 }
 	}else exit;
 	?>
@@ -51,20 +45,6 @@
 	  <th class='td-kecil' rowspan=3>Results</th>
 	  <td class='td-kecil'>
 	  <?php
-	  $content='';
-	  $id=0;
-	  	if(count($url) > 0 and !empty($url))
-		  	foreach($url as $c){
-		  	 if(substr($c,0,4)!=='file' and !empty($c)){
-		  	 	echo '<div style="margin:2px;border:1px solid;float:left;">'.
-		  	 				form_checkbox('deleted_content[]',$jId[$id],'','style="float:left;"').
-		  	 			'<div style="margin:2px;height:20px;max-width:450px;word-wrap:break-word;height:auto;float:left;border:1px solid;">'.$c.'</div>
-		  	 			</div>';
-		  	 }else{
-		  	 	$id_job[]=$jId[$id];
-		  	 }
-		  	 $id++;
-		  	}
 		  	echo '<div style="margin:2px;">'.form_textarea('content','','style="width: 478px;" class="form-control"').'</div>';
 	  ?>
 	  </td>
@@ -78,29 +58,6 @@
 	  <td class='td-kecil'>
 	  	<div id='row2'>
 	  <?php
-	  	if(count($url) !== 0 and !empty($url) and $url !== ''){
-		  	$data_delete=0;
-		  	foreach($url as $c){
-		  	 $path=str_replace(array('http://','file://'),'',$c);
-		  	 $ex=explode('/',$path);
-		  	 if(substr($c,0,4)=='file') {
-			  	 $index=count($ex)-1;
-			  	 $filename=$ex[$index-1].'/'.$ex[$index];
-		  	 	echo form_hidden('hidden[]',$id_job[$data_delete]);
-		  	 	echo '<div class="td-kecil" style="overflow:hidden;border:0px;">';
-		  	 	$ext=substr($ex[$index],-4);
-				  	echo '<div class="td-kecil" style="width:45%;float:right;border:0px;">'.form_checkbox('delete'.$data_delete,$filename).' Delete</div>';
-		  	 	  if($ext=='.png' or $ext=='.bmp' or $ext=='.ico' or $ext=='.jpg' or $ext=='.gif'){
-		  	 		echo '<div class="td-kecil" style="width:50%;border:0px;">'.img(array('src'=>HTTP_UPLOAD_PATH.$filename,'style'=>'width:40px;')).'</div>';
-		  	 	  }else{
-		  	 	  	echo '<div class="td-kecil" style="width:50%;float:left;border:0px;">'.anchor(HTTP_UPLOAD_PATH.$filename,$ex[$index]).'</div>';
-		  	 	  }
-				echo '</div><hr>';
-				
-				 $data_delete++;
-			 }
-		  	}
-	  	}
 	  	echo '
 			<div style="margin:2px;">'.form_upload('userfile[]','','style="width:100%"').'</div>
 			

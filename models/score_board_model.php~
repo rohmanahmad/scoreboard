@@ -74,8 +74,7 @@ class Score_board_model extends CI_Model{
  }
  
  function getJobRes($jobId){
- 	$data=array($this->pref('job.ID')=>$jobId);
- 	$this->db->where($data);
+ 	$this->db->where(array($this->pref('job.ID')=>$jobId));
  	$this->db->select(array(
  				$this->pref('schedule.ID as sc_id'),
  				$this->pref('schedule.date as date'),
@@ -102,15 +101,41 @@ class Score_board_model extends CI_Model{
  	return $data->result();
  }
  
- function get_score($scID,$job_id,$userId){
+ function get_score($scID,$userId){
  	$data=array(
- 		//$this->pref('job_result.ID')=>$jresID,
  		$this->pref('schedule.ID')=>$scID,
  		$this->pref('targets.user_id')=>$userId
  		);
  	$this->db->where($data);
  	$this->db->select(array(
  		$this->pref('job_result.ID as jId'),
+ 		$this->pref('job_result.url as url'),
+ 		$this->pref('job.target_id as tId'),
+ 		$this->pref('job.job_name as jName'),
+ 		$this->pref('targets.user_id as uId'),
+ 		$this->pref('targets.target_name as tName'),
+ 		$this->pref('schedule.date as date')
+ 		));
+ 	$this->db->join($this->pref('schedule'),
+ 				$this->pref('schedule.job_id').' = '.$this->pref('job.ID'),
+ 				'left');
+ 	$this->db->join($this->pref('job_result'),
+ 				$this->pref('job_result.schedule_id').' = '.$this->pref('schedule.ID'),'left');
+ 	$this->db->join($this->pref('targets'),
+ 				$this->pref('targets.ID').' = '.$this->pref('job.target_id'),
+ 				'left');
+ 	$data=$this->db->get($this->pref('job'));
+ 	return $data->result();
+ }
+ 
+ function get_job_result($scID,$userId){
+ 	$data=array(
+ 		$this->pref('schedule.ID')=>$scID,
+ 		$this->pref('targets.user_id')=>$userId
+ 		);
+ 	$this->db->where($data);
+ 	$this->db->select(array(
+ 		$this->pref('job_result.ID as resId'),
  		$this->pref('job_result.url as url'),
  		$this->pref('job.target_id as tId'),
  		$this->pref('job.job_name as jName'),
@@ -173,6 +198,31 @@ class Score_board_model extends CI_Model{
  function delete_row($tablename,$param=array()){
  	$this->db->where($param);
  	$this->db->delete($tablename);
+ }
+ 
+ function get_job_res_by_id($id,$userid){
+ 	$this->db->where(array($this->pref('job_result.ID')=>$id));
+ 	$this->db->where(array($this->pref('targets.user_id')=>$userid));
+ 	$this->db->select(array(
+ 		$this->pref('job_result.ID as resId'),
+ 		$this->pref('job_result.url as url')
+ 		));
+ 	$this->db->join($this->pref('schedule'),
+ 				$this->pref('schedule.job_id').' = '.$this->pref('job.ID'),
+ 				'left');
+ 	$this->db->join($this->pref('job_result'),
+ 				$this->pref('job_result.schedule_id').' = '.$this->pref('schedule.ID'),'left');
+ 	$this->db->join($this->pref('targets'),
+ 				$this->pref('targets.ID').' = '.$this->pref('job.target_id'),
+ 				'left');
+ 	$data=$this->db->get($this->pref('job'));
+ 	return $data;
+ }
+ 
+ function delete_result($id,$userid){
+ 	$data=$this->get_job_res_by_id($id,$userid);
+ 	if($data->num_rows() >= 1) $this->delete_row($this->pref('job_result'),array('ID'=>$id));
+ 	else return false;
  }
  
  function update_row($tablename,$data=array(),$param=array()){
@@ -262,6 +312,27 @@ class Score_board_model extends CI_Model{
  	return $res;
  }
  
+ function select_job_res_file_only($job_id,$user_id){
+ 	$this->db->where(array($this->pref('job.ID')=>$job_id));
+ 	$this->db->where(array($this->pref('targets.user_id')=>$user_id));
+ 	$this->db->where(array('LEFT('.$this->pref('job_result.url').',4)'=>'file'));
+ 	
+ 	$this->db->select(array(
+ 		$this->pref('job_result.ID as resId'),
+ 		$this->pref('job_result.url as url')
+ 		));
+ 	$this->db->join($this->pref('schedule'),
+ 				$this->pref('schedule.job_id').' = '.$this->pref('job.ID'),
+ 				'left');
+ 	$this->db->join($this->pref('job_result'),
+ 				$this->pref('job_result.schedule_id').' = '.$this->pref('schedule.ID'),'left');
+ 	$this->db->join($this->pref('targets'),
+ 				$this->pref('targets.ID').' = '.$this->pref('job.target_id'),
+ 				'left');
+ 	$data=$this->db->get($this->pref('job'));
+ 	return $data->result();
+ }
+ 
  function get_sch_datas($sc_id){
  	$param=array($this->pref('schedule.ID')=>$sc_id);
  	$this->db->where($param);
@@ -293,7 +364,7 @@ class Score_board_model extends CI_Model{
 	return (strtotime($start) - strtotime($end))/(60*60*24);
  }
  
- function save_post_period($target_id=0){
+ function save_post_period($target_id=0,$user_id=0){
  	$q=$this->get_period_data($target_id); //$target_id
 		foreach($q as $trgt){
 			$old_start=date_format(new dateTime($trgt->period_start),'Y-m-d');
@@ -324,13 +395,10 @@ class Score_board_model extends CI_Model{
 						'job_id'=>$job_id
 					);
 					$sc_id=$this->insert_new_schedule($data,true);
-					//$this->insert_new_job_res($sc_id,$content);
 				}
 				if($date==0){
 					$new_date_start=$newdate1;
 				}
-				
-				//echo $new_date_start.br();
 			}
 		 }elseif($difrnc_start < 0 ){
 			if(abs($difrnc_start) <= abs($max_value_start)){
@@ -345,8 +413,9 @@ class Score_board_model extends CI_Model{
 							'date'=>$newdate1,
 							'job_id'=>$job_id
 						);
-						$this->delete_job_result($data);
-						$this->delete_row($this->pref('schedule'),$data);
+						$data_file=$this->get_job_res_by_jobId($job_id);
+						 //$this->delete_job_result($data);
+						//$this->delete_row($this->pref('schedule'),$data);
 					}
 					//change date +1 day
 					if($date==0){
@@ -358,6 +427,7 @@ class Score_board_model extends CI_Model{
 			}else{
 				$new_date_start=$old_start;
 			}
+			exit;
 		 }else{
 			$new_date_start=$new_start;
 		 }
@@ -399,7 +469,6 @@ class Score_board_model extends CI_Model{
 							'job_id'=>$job_id
 						);
 						$sc_id=$this->insert_new_schedule($data,true);
-						//$this->insert_new_job_res($sc_id,$content);
 					}
 			}
 		 }else{
@@ -411,6 +480,23 @@ class Score_board_model extends CI_Model{
 		
 		$this->update_target($new_date_start,$new_date_end,$target_id);
  }
+ 
+ function get_job_res_by_jobId($job_id){
+ 	$this->db->where($this->pref('schedule.job_id'),$job_id);
+ 	$this->db->select($this->pref('schedule.ID'));
+ 	$this->db->join($this->pref('schedule'),$this->pref('schedule.ID').'='.$this->pref('job_result.schedule_id'),'left');
+	$q=$this->db->get($this->pref('job_results'));
+ 	print_r($q->result());
+ }
+ 
+ function delete_file($path){
+		if(file_exists($path)){
+			@unlink($path);
+		}else{
+			echo 'unable to find the file!';
+			exit;
+		}
+	}
  
  function save($user_id){
  	$target=$this->input->post('target');
@@ -467,16 +553,16 @@ class Score_board_model extends CI_Model{
  	$q=$this->get_schedule_id(array('job_id'=>$job_id));
 	 foreach($q as $r){
 	 	$sc_id=$r->ID;
+	 	print_r($r);
 	 	$data=$this->get_job_res($sc_id);
-	 	foreach($data as $r){
-	 		if(substr($r->url,0,4) == 'file'){
-		 		$ex=explode('/',$r->url);
+	 	foreach($data as $r_){
+	 		if(substr($r_->url,0,4) == 'file'){
+		 		$ex=explode('/',$r_->url);
 		 		$filename=$ex(count($ex)-2 .'/'.count($ex)-1);
 		 		echo $filename;
 	 		}
 	 	}
-	 	exit;
-	 	//$this->delete_row($this->pref('job_result'),array('schedule_id'=>$sc_id));
+	 	$this->delete_row($this->pref('job_result'),array('schedule_id'=>$sc_id));
 	 }
 	 $table=array($this->pref('job')=>array('ID'=>$job_id),
 	 		$this->pref('schedule')=>array('job_id'=>$job_id)

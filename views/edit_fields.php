@@ -1,12 +1,12 @@
 <?php if(!isset($result))exit;
 $flash->set_flashdata('id',$ID);
-if($name=='period' )$action=site_url('score_board/change_field/period');
-if($name=='tname' )$action=site_url('score_board/change_field/tname');
-if($name=='sboard' )$action=site_url('score_board/change_field/job');
+if($name=='period' )$action=site_url('scoreboard/change_field/period');
+if($name=='tname' )$action=site_url('scoreboard/change_field/tname');
+if($name=='sboard' )$action=site_url('scoreboard/change_field/job');
 ?>
 <form name="f_change_field" action="<?=$action?>" method="POST">
 <div class='clearfix'>
-	<table class="table" width='50%'>
+	<table class="table" style="width:50%;margin-left:25%">
 	<?php 
 	$n=1;
 	$first=true;
@@ -38,10 +38,12 @@ if($name=='sboard' )$action=site_url('score_board/change_field/job');
 			$date_period=$date[0].'|'.$date[1];
 			$periode=str_replace('|',' - ',str_replace('-','/',$date_period));
 	 		$jobname[]=form_hidden('date_period',$date_period)
-	 			.form_hidden('jid[]',$job_id).form_input('job[]',$jname,'style="width:90%;margin-top:2px;" ')
-	 			.form_button('','Add','class="btn btn-default" style="margin-left:5px;" onclick="add_field();"');
+	 			.form_hidden('jid[]',$job_id).form_input('job[]',$jname,'style="width:80%;margin-top:2px;" ')
+	 			.form_button('','Add','class="btn btn-default" style="margin-left:5px;" onclick="add_field();"')
+	 			.anchor('scoreboard/delete_job/'.$job_id.'/'.$ID,form_button('','Del'),'style="float:right"');
 	 	}else{
-	 		$jobname[]=form_hidden('jid[]',$job_id).form_input('job[]',$jname,'style="width:100%;margin-top:2px;" ');
+	 		$jobname[]=form_hidden('jid[]',$job_id).form_input('job[]',$jname,'style="width:90%;margin-top:2px;" ')
+	 		.anchor('scoreboard/delete_job/'.$job_id.'/'.$ID,form_button('','Del'),'style="float:right"');
 	 	}
 	 }else{
 	 	$jobname[]=strtoupper($jname);
@@ -49,29 +51,31 @@ if($name=='sboard' )$action=site_url('score_board/change_field/job');
 	$first=false;
 	} ?>
 	 <tr>
-	  <td style='width:150px'>Target Name</td>
-	  <td><?=$tname?></td>
+	  <th class='td-head' colspan=2>EDIT FIELD</th>
 	 </tr>
 	 <tr>
-	  <td>Periode</td>
-	  <td><?php if(isset($periode))echo $periode;else echo $period_;?></td>
+	  <th class='td-kecil'>Periode</th>
+	  <td class='td-kecil'><?php if(isset($periode))echo $periode;else echo $period_;?></td>
 	 </tr>
 	 <tr>
-	  <td>Score Board</td>
-	  <td id="job"><?php 
+	  <th class='td-kecil' style='width:150px'>Target Name</th>
+	  <td class='td-kecil'><?=$tname?></td>
+	 </tr>
+	 <tr>
+	  <th class='td-kecil'>Score Board</th>
+	  <td class='td-kecil' id="job"><?php 
 	  	if(isset($jobname)){
 	  	foreach($jobname as $jobs){echo $jobs.br();}
 	  	}?></td>
 	 </tr>
 	 <tr>
-	  <td></td>
-	  <td><?=form_submit('submit','Change','class="btn btn-primary"')?></td>
+	  <td class='td-kecil'></td>
+	  <td class='td-kecil'><?=form_submit('submit','Change','class="btn btn-primary"')?></td>
 	 </tr>
 	 
 	</table>
 </div>
 </form>
-<script src="<?=base_url('assets/js/jquery.js')?>"></script>
 <script type="text/javascript">
 function add_field() {
     var fokus = $("<input type='hidden' name='jid[]' value=''><input type='text' name='job[]' style='width:100%;margin-top:2px;'>");

@@ -1,5 +1,9 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
+define('SERVER_URL','http://'.$_SERVER['HTTP_HOST']);
+define('UPLOAD_PATH','/home/server/www/ADM_UPLOAD/scoreboard/');
+define('HTTP_UPLOAD_PATH',SERVER_URL.'/ADM_UPLOAD/scoreboard/');
+
 class Scoreboard extends CI_Controller {
 
 	function __construct(){
@@ -14,7 +18,8 @@ class Scoreboard extends CI_Controller {
 	}
 	
 	function get_uId(){
-		return 16;
+		$s=$this->session->userdata('session_user');
+		return($s['ID']); 
 	}
 	
 	function flash(){
@@ -23,7 +28,7 @@ class Scoreboard extends CI_Controller {
 	}
 	
 	function path($name=''){
-		return BASE_PATH.$name;
+		return UPLOAD_PATH.$name;
 	}
 	
 	function uri_segment(){
@@ -40,6 +45,7 @@ class Scoreboard extends CI_Controller {
 		$this->load->helper('form');
 		$this->header($data);
 		$this->load->view('view_sbd',$data);
+		$this->load->view('footer',$data);
 	}
 	
 	function targets(){
@@ -47,6 +53,7 @@ class Scoreboard extends CI_Controller {
 		$data['result']=$this->m->getTargets($uId);
 		$this->header();
 		$this->load->view('targets',$data);
+		$this->load->view('footer',$data);
 	}
 	
 	function save(){
@@ -67,107 +74,24 @@ class Scoreboard extends CI_Controller {
 		$data['c']=$this;
 		$this->load->helper('form');
 		$this->load->view('scoreboard',$data);
+		$this->load->view('footer',$data);
 	}
 	
-	function edit_job($scID=0,$job_id=0){
+	function browse_job_result($scID=0){
 		$userId=$this->get_uId();
-		$data['include_js'] = jquery_js_core() . 
-			'<script src="' .base_url(). 'assets/js/jquery-1.7.min.js"></script>';
-		$data['flash']=$this->flash();
+		$data['job_res_datas']=$this->m->get_job_result($scID,$userId);
 		$data['uri']=$this->uri;
-		$this->load->helper('form');
-		$data['res']=$this->m->get_score($scID,$job_id,$userId);
 		$this->header($data);
-		$this->load->view('edit',$data);
+		$this->load->view('browse_job_result',$data);
+		$this->load->view('footer',$data);
 	}
 	
-	function update_sc($sc_id){ echo $sc_id;
-		$str=urlencode($_POST['content']);
-	 	if(!empty($str)){
-	 	 $ex=explode('%0A',$str);
-	 	 $total=count($ex);
-	 	}else{
-	 	 $total=0;
-	 	}
-		$res=$this->m->get_job_res($sc_id);
-		$job_res_id=array();
-		foreach($res as $r){
-			$job_res_id[]=$r->ID;
-		}
-		if($total <= 0)$url=array();
-		 for($a=0;$a <= $total-1;$a++){
-		 	if($ex[$a] !== '')
-		 	$url[]=urldecode($ex[$a]);
-		 }
-		$count_job=count($job_res_id);
-		$count_url=count($url);
-		 
-		 if($count_job <= $count_url){
-		  for($a=0;$a<=$count_url - 1;$a++){
-		   $content=$url[$a];
-		   if(isset($job_res_id[$a])){
-		   	$jres_id=$job_res_id[$a];
-		   	$this->m->update_job_res($jres_id,$content);
-		   }else{
-		   	$this->m->insert_new_job_res($sc_id,$content);
-		   }
-		  }
-		 }elseif($count_job > $count_url){
-		 	for($a=0;$a<=$count_job-1;$a++){
-		 		$id=$job_res_id[$a];
-		 		if(isset($url[$a])){
-		 			$this->m->update_job_res($id,$url[$a]);
-		 		}else{
-		 			$this->m->delete_job_res_id($id);
-		 		}
-		 	}
-		 }
-		 return $sc_id;
-	}
-	
-	function update_score(){
-		if($_POST){
-			$sc_id=$this->flash()->flashdata('ID');
-			 	$this->update_sc($sc_id);
-			 	if(isset($_POST['hidden'])){
-			 	 $hidden=$_POST['hidden'];
-				 	for($b=0;$b<=count($hidden)-1;$b++){
-				 	   $id=$hidden[$b];
-					   if(isset($_POST['delete'.$b])){
-					   	$filedelete=$_POST['delete'.$b];
-							$this->delete_file($filedelete); //DELETE
-							$this->m->prepare_delete_jres($id);
-					    }
-					 }
-				 }
-			if($_FILES['userfile']['name'][0] != ''){
-				$this->load->library('upload');
-				$files = $_FILES;
-				$cpt = count($_FILES['userfile']['name']);
-				for($i=0; $i<$cpt; $i++)
-				{
-					$_FILES['userfile']['name']= $files['userfile']['name'][$i];
-					$_FILES['userfile']['type']= $files['userfile']['type'][$i];
-					$_FILES['userfile']['tmp_name']= $files['userfile']['tmp_name'][$i];
-					$_FILES['userfile']['error']= $files['userfile']['error'][$i];
-					$_FILES['userfile']['size']= $files['userfile']['size'][$i];    
-					$this->upload->initialize($this->set_upload_options());
-					if(!$this->upload->do_upload())	{
-						print_r($this->upload->display_errors());
-					}else{	
-						$data=$this->upload->data();
-						$this->m->insert_new_job_res($sc_id,'file://'.$data['full_path']);
-					}
-				}
-			}
-		}
-		redirect($this->flash()->flashdata('last_url'));
-	}
-	
-	function delete_file($filename){
-		$path = $this->path('assets/uploads/score_board/'.$filename);
+	function delete_file($path){
 		if(file_exists($path)){
 			@unlink($path);
+		}else{
+			echo 'unable to find the file!';
+			exit;
 		}
 	}
 	
@@ -175,7 +99,7 @@ class Scoreboard extends CI_Controller {
 	{   
 	//  upload an image options
 	    $config = array();
-	    $dir='./assets/uploads/score_board/'.date('d-m-y');
+	    $dir=UPLOAD_PATH.date('d-m-y');
 	    if(!is_dir($dir)){
 	    	mkdir($dir,0777,true);
 	    	chmod($dir, 0777);
@@ -210,15 +134,18 @@ class Scoreboard extends CI_Controller {
 		$data['flash']=$this->flash();
 		$data['uri']=$this->uri_segment();
 		$this->load->helper('form');
+		$data['include_js'] = jquery_js_core() . 
+			'<script src="' .base_url(). 'assets/js/jquery-1.7.min.js"></script>';
 		
-		$this->header();
+		$this->header($data);
 		$this->load->view('edit_fields',$data);
+		$this->load->view('footer',$data);
 	}
 	
 	function save_post_period($target_id=0){
-		//print_r($_POST);
+		$user_id=$this->get_uId();
 		$target_id=$this->flash()->flashdata('id');
-		$this->m->save_post_period($target_id);
+		$this->m->save_post_period($target_id,$user_id);
 		redirect('scoreboard/targets');
 	}
 	
@@ -276,8 +203,107 @@ class Scoreboard extends CI_Controller {
 	}
 	
 	function delete_job($job_id=0,$target_id=0){
-		 $this->m->delete_job($job_id,$target_id);
-		 //redirect('scoreboard/scoreBoard/'.$target_id);
+		$user_id=$this->get_uId();
+		$data=$this->m->select_job_res_file_only($job_id,$user_id);
+		foreach($data as $r){
+			$path=str_replace(array('http://','file://'),'',$r->url);
+			  	 	$ex=explode('/',$path);
+			  	 	$index=count($ex)-1;
+				  	$filename=UPLOAD_PATH.$ex[$index-1].'/'.$ex[$index];
+						if(file_exists($filename)){
+							$this->delete_file($filename); //DELETE
+						 }
+		}
+		$this->m->delete_job($job_id,$target_id);
+		redirect('scoreboard/scoreBoard/'.$target_id);
+	}
+	
+	function add_job_result($scID=0){
+		$this->add_new_job_res();
+		$userId=$this->get_uId();
+		$data['include_js'] = jquery_js_core() . 
+			'<script src="' .base_url(). 'assets/js/jquery-1.7.min.js"></script>';
+		$data['flash']=$this->flash();
+		$data['uri']=$this->uri;
+		$this->load->helper('form');
+		$data['res']=$this->m->get_score($scID,$userId);
+		$this->header($data);
+		$this->load->view('add_job_result',$data);
+		$this->load->view('footer',$data);
+	}
+	
+	function add_new_job_res(){
+		if($_POST){
+			$sc_id=$this->flash()->flashdata('ID');
+			// URL CONTENT
+			if(!empty($_POST['content'])){
+				$this->process_add($sc_id);
+			}
+			// FILE UPLOAD
+			if($_FILES['userfile']['name'][0] != ''){
+				$this->load->library('upload');
+				$files = $_FILES;
+				$cpt = count($_FILES['userfile']['name']);
+				for($i=0; $i<$cpt; $i++)
+				{
+					$_FILES['userfile']['name']= $files['userfile']['name'][$i];
+					$_FILES['userfile']['type']= $files['userfile']['type'][$i];
+					$_FILES['userfile']['tmp_name']= $files['userfile']['tmp_name'][$i];
+					$_FILES['userfile']['error']= $files['userfile']['error'][$i];
+					$_FILES['userfile']['size']= $files['userfile']['size'][$i];    
+					$this->upload->initialize($this->set_upload_options());
+					if(!$this->upload->do_upload())	{
+						print_r($this->upload->display_errors());
+					}else{
+						$data=$this->upload->data();
+						$this->m->insert_new_job_res($sc_id,'file://'.$data['full_path']);
+					}
+				}
+			}
+			redirect($this->flash()->flashdata('last_url'));
+		}
+	}
+	
+	function process_add($sc_id){
+		$str=urlencode($_POST['content']);
+	 	if(!empty($str)){
+	 	 $ex=explode('%0A',$str);
+	 	 $total=count($ex);
+	 	}else{
+	 	 $total=0;
+	 	}
+		if($total <= 0)$url=array();
+		 for($a=0;$a <= $total-1;$a++){
+		 	if($ex[$a] !== '')
+		 	$url[]=urldecode($ex[$a]);
+		 }
+		$count_url=count($url);
+		 
+		  for($a=0;$a<=$count_url - 1;$a++){
+		   	$content=$url[$a];
+		   	$this->m->insert_new_job_res($sc_id,$content);
+		  }
+		 return $sc_id;
+	}
+	
+	function delete_result($id=0,$target=0){
+		$userid=$this->get_uId();
+		$data=$this->m->get_job_res_by_id($id,$userid);
+		foreach($data->result() as $r){
+			$content=substr($r->url,0,4);
+			if($content == 'file'){
+				$path=str_replace(array('http://','file://'),'',$r->url);
+			  	 	$ex=explode('/',$path);
+			  	 	$index=count($ex)-1;
+				  	$filename=UPLOAD_PATH.$ex[$index-1].'/'.$ex[$index];
+						if(file_exists($filename)){
+							$this->delete_file($filename); //DELETE
+							$this->m->prepare_delete_jres($id);
+						 }
+			}
+		}
+		$this->m->delete_result($id,$userid);
+		redirect('scoreboard/browse_job_result/'.$target);
 	}
 	
 	function reset_data($table=''){
@@ -290,7 +316,6 @@ class Scoreboard extends CI_Controller {
 	
 	function edit_targets(){
 		if(isset($_POST['id'])){
-			//print_r($_POST);
 			$this->m->edit_target();
 			redirect('scoreboard/targets');
 		}
@@ -303,6 +328,7 @@ class Scoreboard extends CI_Controller {
 		$this->load->helper('form');
 		$this->header();
 		$this->load->view('change_field_schedule',$data);
+		$this->load->view('footer',$data);
 	}
 	
 	function get_smile($status=':-)'){

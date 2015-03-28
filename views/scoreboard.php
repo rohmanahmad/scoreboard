@@ -21,6 +21,9 @@ foreach($result as $r){
 		 $rowCount=count($tgl);
 	?>
 	 <tr>
+	  <th class='td-head' colspan="<?=$rowCount+5?>">SCOREBOARD</th>
+	 </tr>
+	 <tr>
 	  <th class="td-kecil" colspan=2>Fokus</th>
 	  <td class='td-kecil' colspan="<?=$rowCount+3?>"> <?=strtoupper($targetName)
 	  	.anchor('scoreboard/change_field/tname/'.$ID,'<span class="glyphicon glyphicon-pencil">Edit</span>','class="btn btn-default" style="margin-left:10px;"')
@@ -39,7 +42,7 @@ foreach($result as $r){
 	  	?></td>
 	 </tr>
 	 <tr style='background:#91A1F0'>
-	  <th class="td-kecil" rowspan=2 colspan=2>Lead</th>
+	  <th class="td-kecil" rowspan=2 colspan=2>Target Job</th>
 	  <th class="td-kecil" rowspan=2 colspan=2>Target</th>
 	  <th class="td-kecil" colspan="<?=$rowCount+2?>" class='text-center' style='width:50%'>Tanggal</th>
 	 </tr>
@@ -64,9 +67,10 @@ if($jobId != ''){
 	 ?>
 
 	 <tr>
+	 	<td class='td-kecil'>*</td>
+	  <!--td class='td-kecil'><?=anchor('scoreboard/delete_job/'.$jobId.'/'.$targetId,'<i class="glyphicon glyphicon-trash">Delete</i>')?></td-->
 	  <td class='td-kecil' colspan=1><?php if($jobName != 'NotSet(Empty)')echo $jobName;else echo '<font color="red">'.$jobName.'</font>'//.anchor('scoreboard/change_field/jname/'.$jobId.'/'.$ID,'&nbsp;<span class="glyphicon glyphicon-pencil"></span>')?></td>
-	  <td class='td-kecil'><?=anchor('scoreboard/delete_job/'.$jobId.'/'.$targetId,'<i class="glyphicon glyphicon-trash">Delete</i>')?></td>
-	  <td class='td-kecil' style="padding:0px;">
+	  <td class='td-kecil' style='border-right:0px;' style="padding:0px;">
 	  	<div class='row' style='margin-right:0px;'>
 			  <div class='col-md-2' style='width:90%;float:right;background:#fff;' >
 			   <span id="<?='data'.$o?>"></span><br/>
@@ -74,7 +78,7 @@ if($jobId != ''){
 			  </div> 
 		</div>
 	  </td>
-	  <td class='td-kecil' id="<?='ico'.$o?>">.</td>
+	  <td class='td-kecil' style='border-left:0px;' id="<?='ico'.$o?>">.</td>
 	<?php
 	$job=$c->getJobRes($jobId);
 	$nn=0;
@@ -98,19 +102,18 @@ if($jobId != ''){
 			  <div class='col-md-8' style='width:94%;float:right;background:#70C7B6'>".
 			  $total
 			  ."</div> 
-			  ".anchor(site_url('scoreboard/edit_job/'.$sc_id.'/'.$jobId),'View','class="col-md-8"')."
+			  ".anchor(site_url('scoreboard/browse_job_result/'.$sc_id),'View','class="col-md-8"')."
 			</div>
 		</td>";
 		$nn++;
 	  }
-
 	?>
 	<td class='td-kecil'><?='<a href="#" onclick="submit_form();"><i class="glyphicon glyphicon-pencil">Edit</i></a>'?></td>
 	<script src="<?=base_url('assets/js/jquery-1.7.min.js')?>"></script>
 	<script type="text/javascript">
 	$(document).ready(function(){
-		var sum="<?=$sum?>";
-		var count="<?=$total_count?>";	
+		var sum=Number("<?=intval($sum)?>");
+		var count=Number("<?=intval($total_count)?>");	
 		var class_a="#data<?=$o?>";
 		var class_b="#data_count<?=$o?>";
 		var class_c="#ico<?=$o?>";
