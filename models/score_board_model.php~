@@ -22,7 +22,7 @@ class Score_board_model extends CI_Model{
  	$this->db->join($this->pref('targets'),$this->pref('targets.ID').'='.$this->pref('job.target_id'),'left');
  	
  	$data=$this->db->get($this->pref('schedule'));
- 	return $data->result();
+ 	return $data->row();
  }
  
  function insert_new_schedule($data,$return=false){
@@ -530,7 +530,6 @@ class Score_board_model extends CI_Model{
 			@unlink($path);
 		}else{
 			echo 'unable to find the file!';
-			exit;
 		}
 	}
  

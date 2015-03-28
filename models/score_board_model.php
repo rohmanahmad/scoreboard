@@ -461,7 +461,6 @@ class Score_board_model extends CI_Model{
 			}else{
 				$new_date_start=$old_start;
 			}
-			exit;
 		 }else{
 			$new_date_start=$new_start;
 		 }
@@ -530,7 +529,6 @@ class Score_board_model extends CI_Model{
 			@unlink($path);
 		}else{
 			echo 'unable to find the file!';
-			exit;
 		}
 	}
  
