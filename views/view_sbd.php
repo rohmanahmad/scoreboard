@@ -1,7 +1,7 @@
 <div class="row">
   <div class="col-md-8">
   	<?=form_open(site_url('scoreboard/save'))?>
-  	<table class='table' style="margin-left:30%;">
+  	<table class='table' style="margin-left:30%;" width='30%'>
   	 
 			 <tr>
 			  <th colspan=3 class='td-head' style="color:#fff;">FOKUS ANDA</th>

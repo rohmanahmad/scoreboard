@@ -9,8 +9,8 @@
  	$tname='';
  	$url=array();
  	
-	$flash->set_flashdata('ID',$uri->segment(3));
-	$flash->set_flashdata('last_url',$uri->uri_string());
+	$flashId= $flash->set_flashdata('ID',$uri->segment(3));
+
 	if(isset($res)){
 	 if (count($res) == 0) $not_set=true;
 	 foreach($res as $r){

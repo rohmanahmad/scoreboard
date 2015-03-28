@@ -11,46 +11,30 @@ if(!isset($fields))exit;
 <?php
 $jobname='';
 $n=1;
-$count=count($fields);
-$data='';
-foreach($fields as $c){
- echo $date=$c->date;
- if($jobname!==$c->jobname){
-  $data .= '||';
-  $jobname=$r->jobname;
- }else{
-   echo 's';
-   $data .= $date;
- }
-}
-echo $data;
-
 foreach($fields as $r){
  $job_id=$r->job_id;
  $id=$r->ID.'|'.$job_id;
  $date=$r->date;
  $count=$r->count;
  $jname=$r->jobname;
+ $data[]=$date;
  if($jobname!==$r->jobname){
 	  echo '<tr bgcolor="#C0C0C0">
 	  	 <td colspan=3> </td>
 	  	</tr>';
 	  $n=1;
 	  $jobname=$r->jobname;
-	  $data=array();
 	}else{
-	 echo form_hidden('id[]',$id);
+		
 	}
 	
-if($n==1){
 ?>
  <tr>
   <td><?php echo ucwords($jname);//if($print==true){echo ucwords($jobname);}?></td>
-  <td><?php echo $date;?></td>
-  <td><?php echo form_input(array('name'=>'count'.$job_id,'value'=>$count,'type'=>'number'));?></td>
+  <td><?php echo $date.form_hidden('id[]',$id)?></td>
+  <td><?php if($n==1)echo form_input(array('name'=>'count'.$job_id,'value'=>$count,'type'=>'number'));?></td>
  </tr>
  <?php
-}
  $n=2;
  }
  ?>

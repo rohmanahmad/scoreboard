@@ -78,6 +78,7 @@ class Scoreboard extends CI_Controller {
 	}
 	
 	function browse_job_result($scID=0){
+		$this->session->set_flashdata('last_url',$this->uri->uri_string());
 		$userId=$this->get_uId();
 		$data['job_res_datas']=$this->m->get_job_result($scID,$userId);
 		$data['uri']=$this->uri;
@@ -193,13 +194,24 @@ class Scoreboard extends CI_Controller {
 		print_r(br().'['.$bagian.'<>'.$value.']'.br());
 	}	
 	
-	function delete_target($id=0){
+	function delete_target($tId=0){
 		$userId=$this->get_uId();
-		$q=$this->m->getTargets($userId,$id);
+		$q=$this->m->getTargets($userId,$tId);
 		if(count($q)>0){
-			$this->m->delete_target_packet($id);
+			$data=$this->m->get_job_res_from_tId($tId);
+			foreach($data as $r){
+				$url=$r->url;
+				$path=str_replace(array('http://','file://'),'',$url);
+			  	 	$ex=explode('/',$path);
+			  	 	$index=count($ex)-1;
+				  	$filename=UPLOAD_PATH.$ex[$index-1].'/'.$ex[$index];
+						if(file_exists($filename)){
+							$this->delete_file($filename); //DELETE
+						}
+			}
+			$this->m->delete_target_packet($tId);
 		}
-		redirect('scoreboard');
+		//redirect('scoreboard');
 	}
 	
 	function delete_job($job_id=0,$target_id=0){
@@ -223,6 +235,7 @@ class Scoreboard extends CI_Controller {
 		$userId=$this->get_uId();
 		$data['include_js'] = jquery_js_core() . 
 			'<script src="' .base_url(). 'assets/js/jquery-1.7.min.js"></script>';
+		$this->session->keep_flashdata('last_url');
 		$data['flash']=$this->flash();
 		$data['uri']=$this->uri;
 		$this->load->helper('form');
@@ -260,7 +273,10 @@ class Scoreboard extends CI_Controller {
 					}
 				}
 			}
-			redirect($this->flash()->flashdata('last_url'));
+			$url=$this->flash()->flashdata('last_url');
+			if(empty($url))$url='scoreboard/targets';
+			
+			redirect($url);
 		}
 	}
 	
@@ -335,7 +351,6 @@ class Scoreboard extends CI_Controller {
 		$this->load->helper('smiley');
 		$data = parse_smileys($status,base_url().'assets/images/smileys/');
 		return $data;
-		
 	}
 	
 	function get_period($jId){

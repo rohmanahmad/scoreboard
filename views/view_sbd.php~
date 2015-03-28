@@ -47,17 +47,13 @@ for (var i=1;i <= 2; i++)
 
 function add_itm() {
     var tr = $('<tr></tr>');
-    var td = $('<td class="td-kecil"></td>');
-    var td_f = $('<td class="td-kecil"></td>');
-    //var td_t = $('<td class="td-kecil"></td>');
+    var td = $('<td></td>');
+    var td_f = $('<td></td>');
     var fokus = $("<input type='text' name='job[]' class='form-control' placeholder='fokus' style='width:100%'>");
-    //var target = $("<input type='text' name='target[]' class='form-control' style='width:50px' placeholder='0'>");
     
-     $('#lead').append(tr);
+   $('#lead').append(tr);
 	$(tr).append(td_f);
-	//$(tr).append(td_t);
 	$(td_f).append(fokus);
-	//$(td_t).append(target);
 }
 </script>
 	

@@ -1,7 +1,7 @@
 <?php
 if (!isset($result)) exit;
 ?>
-<table class='table'>
+<table class='table' style='margin-left:30%'>
  <tr>
   <td class='td-head' colspan='4'>TARGETS</td>
  </tr>

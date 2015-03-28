@@ -51,26 +51,32 @@ if($name=='sboard' )$action=site_url('scoreboard/change_field/job');
 	$first=false;
 	} ?>
 	 <tr>
-	  <th class='td-head' colspan=2>EDIT FIELD</th>
+	  <th class='td-head' colspan=3>EDIT FIELD</th>
 	 </tr>
 	 <tr>
 	  <th class='td-kecil'>Periode</th>
 	  <td class='td-kecil'><?php if(isset($periode))echo $periode;else echo $period_;?></td>
+	  <td class='td-kecil' style='color:red'>(*) Jika periode dikurangi maka data yang ada pada tgl tsb akan terhapus!</td>
 	 </tr>
 	 <tr>
 	  <th class='td-kecil' style='width:150px'>Target Name</th>
-	  <td class='td-kecil'><?=$tname?></td>
+	  <td class='td-kecil' colspan=2><?=$tname?></td>
 	 </tr>
 	 <tr>
 	  <th class='td-kecil'>Score Board</th>
-	  <td class='td-kecil' id="job"><?php 
+	  <td class='td-kecil' id="job" colspan=2>
+	  	<ul>
+	  <?php 
 	  	if(isset($jobname)){
-	  	foreach($jobname as $jobs){echo $jobs.br();}
-	  	}?></td>
+	  	foreach($jobname as $jobs){
+	  		echo '<li>'.$jobs.'<hr></li>';}
+	  	}?>
+	  	</ul>
+	  	</td>
 	 </tr>
 	 <tr>
 	  <td class='td-kecil'></td>
-	  <td class='td-kecil'><?=form_submit('submit','Change','class="btn btn-primary"')?></td>
+	  <td class='td-kecil' colspan=2><?=form_submit('submit','Change','class="btn btn-primary"')?></td>
 	 </tr>
 	 
 	</table>
