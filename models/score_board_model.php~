@@ -461,7 +461,6 @@ class Score_board_model extends CI_Model{
 			}else{
 				$new_date_start=$old_start;
 			}
-			exit;
 		 }else{
 			$new_date_start=$new_start;
 		 }
@@ -625,6 +624,32 @@ class Score_board_model extends CI_Model{
  	$this->update_row($this->pref('schedule'),$data,$param);
  }
  
+ 
+ //--------------------- ADMIN----------------//
+ function get_all_users(){
+ 	$this->db->where('tgl_keluar','0000-00-00');
+ 	$this->db->select(array('ID','nama_lengkap'));
+ 	$q=$this->db->get('pengguna');
+ 	return $q->result();
+ }
+ 
+ function filter_targets(){
+ 	if($_POST){
+ 		$user_id=$this->input->post('userId');
+ 			if(!empty($user_id))$this->db->where('pengguna.ID',$user_id);
+ 		$year=$this->input->post('cmb_tahun');
+ 			if(!empty($year))$this->db->where('LEFT('.$this->pref('targets.period_start').',4)',$year);
+ 		
+ 	}
+ 		return $this->get_all_targets();
+ }
+ 
+ function get_all_targets(){
+ 	$this->db->select(array($this->pref('targets.*'),'pengguna.username'));
+ 	$this->db->join('pengguna','pengguna.ID = '.$this->pref('targets.user_id'),'left');
+ 	$q=$this->db->get($this->pref('targets'));
+ 	return $q->result();
+ }
 
 }
 ?>

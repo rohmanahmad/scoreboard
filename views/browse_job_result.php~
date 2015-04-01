@@ -37,7 +37,7 @@ foreach($job_res_datas as $r){
 	</tr>
 	<tr>
 	 <td class="td-kecil" width='50px' colspan=2>Tanggal  &emsp; &emsp;&emsp;&emsp; : <?=$date?></td>
-	 <td><?=anchor('scoreboard/add_job_result/'.$uri->segment(3),'Tambah')?></td>
+	 <td><?php if(!isset($admin)) echo anchor('scoreboard/add_job_result/'.$uri->segment(3),'Tambah')?></td>
 	</tr>
 	<tr bgcolor='#A7B1E7'>
 	 <th class="td-kecil">No</th>

@@ -25,20 +25,26 @@ foreach($result as $r){
 	 </tr>
 	 <tr>
 	  <th class="td-kecil" colspan=2>Fokus</th>
-	  <td class='td-kecil' colspan="<?=$rowCount+3?>"> <?=strtoupper($targetName)
-	  	.anchor('scoreboard/change_field/tname/'.$ID,'<span class="glyphicon glyphicon-pencil">Edit</span>','class="btn btn-default" style="margin-left:10px;"')
-	  	?></td>
+	  <td class='td-kecil' colspan="<?=$rowCount+3?>"> 
+	  	<?php 
+	  		echo strtoupper($targetName);
+	  		if(!isset($admin)) echo anchor('scoreboard/change_field/tname/'.$ID,'<span class="glyphicon glyphicon-pencil">Edit</span>','class="btn btn-default" style="margin-left:10px;"');
+	  	?>
+	  </td>
 	 </tr>
 	 <tr>
 	  <th class="td-kecil" colspan=2>Periode</th>
-	  <td class='td-kecil' colspan="<?=$rowCount+3?>"> <?=$period.anchor('scoreboard/change_field/period/'
-	  	.$ID,'<span class="glyphicon glyphicon-pencil">Edit</span>','class="btn btn-default" style="margin-left:10px;"')?></td>
+	  <td class='td-kecil' colspan="<?=$rowCount+3?>"> 
+	  	<?php 
+	  		echo $period;
+	  		if(!isset($admin)) echo anchor('scoreboard/change_field/period/'.$ID,'<span class="glyphicon glyphicon-pencil">Edit</span>','class="btn btn-default" style="margin-left:10px;"');?></td>
 	 </tr>
 	 <tr>
 	  <th class="td-kecil" colspan=2>Scoreboard</th>
 	  <td class='td-kecil' colspan="<?=$rowCount+3?>">
-	  	<?=anchor('scoreboard/change_field/sboard/'
-	  	.$ID,'<span class="glyphicon glyphicon-pencil">Edit</span>','class="btn btn-default" style="margin-left:10px;"')
+	  	<?php
+	  	if(!isset($admin)) echo anchor('scoreboard/change_field/sboard/'
+	  	.$ID,'<span class="glyphicon glyphicon-pencil">Edit</span>','class="btn btn-default" style="margin-left:10px;"');
 	  	?></td>
 	 </tr>
 	 <tr style='background:#91A1F0'>
@@ -108,8 +114,7 @@ if($jobId != ''){
 		$nn++;
 	  }
 	?>
-	<td class='td-kecil'><?='<a href="#" onclick="submit_form();"><i class="glyphicon glyphicon-pencil">Edit</i></a>'?></td>
-	<script src="<?=base_url('assets/js/jquery-1.7.min.js')?>"></script>
+	<td class='td-kecil'><?php if(!isset($admin)) echo '<a href="#" onclick="submit_form();"><i class="glyphicon glyphicon-pencil">Edit</i></a>';?></td>
 	<script type="text/javascript">
 	$(document).ready(function(){
 		var sum=Number("<?=intval($sum)?>");

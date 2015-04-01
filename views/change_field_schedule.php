@@ -30,7 +30,7 @@ foreach($fields as $r){
 	
 ?>
  <tr>
-  <td><?php echo ucwords($jname);//if($print==true){echo ucwords($jobname);}?></td>
+  <td><?php echo $jname;//if($print==true){echo ucwords($jobname);}?></td>
   <td><?php echo $date.form_hidden('id[]',$id)?></td>
   <td><?php if($n==1)echo form_input(array('name'=>'count'.$job_id,'value'=>$count,'type'=>'number'));?></td>
  </tr>
