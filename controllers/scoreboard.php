@@ -17,9 +17,10 @@ class Scoreboard extends CI_Controller {
 	 	$this->load->view('main/header',$data);
 	}
 	
-	function get_uRight(){
+	function get_uRights(){
 		$s=$this->session->userdata('session_user');
 		//print_r($s['hak']); 
+		//return 1;
 		return $s['hak'];
 	}
 	
@@ -61,7 +62,7 @@ class Scoreboard extends CI_Controller {
 	}
 	
 	function targets(){
-		$ur=$this->get_uRight();
+		$ur=$this->get_uRights();
 		$uId=$this->get_uId();
 		if($ur == 1){
 			$this->load->helper(array('my_date','form'));
@@ -86,7 +87,7 @@ class Scoreboard extends CI_Controller {
 	
 	function scoreBoard($id=''){
 		if ($id=='') exit;
-		if($this->get_uRight() == 1)$data['admin']=true;
+		if($this->get_uRights() == 1)$data['admin']=true;
 		$data['include_js'] = jquery_js_core() . 
 			'<script src="' .base_url(). 'assets/js/jquery-1.7.min.js"></script>';
 		$this->header($data);
@@ -103,7 +104,7 @@ class Scoreboard extends CI_Controller {
 	function browse_job_result($scID=0){
 		$this->session->set_flashdata('last_url',$this->uri->uri_string());
 		$userId=$this->get_uId();
-		if($this->get_uRight() == 1)$data['admin']=true;
+		if($this->get_uRights() == 1)$data['admin']=true;
 		$data['job_res_datas']=$this->m->get_job_result($scID,$userId);
 		$data['uri']=$this->uri;
 		$this->header($data);

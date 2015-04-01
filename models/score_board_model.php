@@ -647,6 +647,7 @@ class Score_board_model extends CI_Model{
  function get_all_targets(){
  	$this->db->select(array($this->pref('targets.*'),'pengguna.username','pengguna.nama_lengkap'));
  	$this->db->join('pengguna','pengguna.ID = '.$this->pref('targets.user_id'),'left');
+ 	$this->db->order_by($this->pref('targets.period_start'),'desc');
  	$q=$this->db->get($this->pref('targets'));
  	return $q->result();
  }
