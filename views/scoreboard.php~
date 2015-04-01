@@ -37,7 +37,7 @@ foreach($result as $r){
 	  <td class='td-kecil' colspan="<?=$rowCount+3?>"> 
 	  	<?php 
 	  		echo $period;
-	  		if(!isset($admin)) echo anchor('scoreboard/change_field/period/'.$ID,'<span class="glyphicon glyphicon-pencil">Edit</span>','class="btn btn-default" style="margin-left:10px;"')?></td>
+	  		if(!isset($admin)) echo anchor('scoreboard/change_field/period/'.$ID,'<span class="glyphicon glyphicon-pencil">Edit</span>','class="btn btn-default" style="margin-left:10px;"');?></td>
 	 </tr>
 	 <tr>
 	  <th class="td-kecil" colspan=2>Scoreboard</th>

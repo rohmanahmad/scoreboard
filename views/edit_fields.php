@@ -46,7 +46,7 @@ if($name=='sboard' )$action=site_url('scoreboard/change_field/job');
 	 		.anchor('scoreboard/delete_job/'.$job_id.'/'.$ID,form_button('','Del'),'style="float:right"');
 	 	}
 	 }else{
-	 	$jobname[]=strtoupper($jname);
+	 	$jobname[]=$jname;
 	 }
 	$first=false;
 	} ?>

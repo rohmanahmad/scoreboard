@@ -56,7 +56,7 @@ if($name=='sboard' )$action=site_url('scoreboard/change_field/job');
 	 <tr>
 	  <th class='td-kecil'>Periode</th>
 	  <td class='td-kecil'><?php if(isset($periode))echo $periode;else echo $period_;?></td>
-	  <td class='td-kecil'>(*) Jika periode dikurangi maka data yang ada pada tgl tsb akan terhapus!</td>
+	  <td class='td-kecil' style='color:red'>(*) Jika periode dikurangi maka data yang ada pada tgl tsb akan terhapus!</td>
 	 </tr>
 	 <tr>
 	  <th class='td-kecil' style='width:150px'>Target Name</th>

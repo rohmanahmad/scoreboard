@@ -27,7 +27,7 @@ foreach($result as $r){
 	  <th class="td-kecil" colspan=2>Fokus</th>
 	  <td class='td-kecil' colspan="<?=$rowCount+3?>"> 
 	  	<?php 
-	  		echo strtoupper($targetName);
+	  		echo $targetName;
 	  		if(!isset($admin)) echo anchor('scoreboard/change_field/tname/'.$ID,'<span class="glyphicon glyphicon-pencil">Edit</span>','class="btn btn-default" style="margin-left:10px;"');
 	  	?>
 	  </td>
