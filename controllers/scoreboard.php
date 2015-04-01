@@ -20,7 +20,7 @@ class Scoreboard extends CI_Controller {
 	function get_uRight(){
 		$s=$this->session->userdata('session_user');
 		//print_r($s['hak']); 
-		return 1;
+		return $s['hak'];
 	}
 	
 	function get_uId(){

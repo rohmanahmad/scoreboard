@@ -89,7 +89,7 @@ class Scoreboard extends CI_Controller {
 		if($this->get_uRight() == 1)$data['admin']=true;
 		$data['include_js'] = jquery_js_core() . 
 			'<script src="' .base_url(). 'assets/js/jquery-1.7.min.js"></script>';
-		$this->header();
+		$this->header($data);
 		$result=$this->m->getJobs($id);
 		$data['result']=$result;
 		$data['model']=$this->m;
