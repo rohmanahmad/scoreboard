@@ -117,16 +117,17 @@ if($jobId != ''){
 	  }
 	?>
 	<td class='td-kecil'><?php if(!isset($admin)) echo '
-		<input type="checkbox" onclick="this.value=check(this.form.line'.$o.')" />
+		<input type="checkbox" onclick="this.value=check(this.form.line'.$o.',this)" />
 		<a href="#" onclick="submit_form();"><i class="glyphicon glyphicon-pencil">Edit</i></a>';?></td>
 	<script type="text/javascript">
 	$(document).ready(function(){
 		var sum=Number("<?=intval($sum)?>");
 		var count=Number("<?=intval($total_count)?>");	
+		var count_all=Number("<?=intval($t_count)?>");	
 		var class_a="#data<?=$o?>";
 		var class_b="#data_count<?=$o?>";
 		var class_c="#ico<?=$o?>";
-		$("#jobname<?=$o?>").append('('+count+')');
+		$("#jobname<?=$o?>").append('('+count_all+')');
 		$(class_a).html('<b>' + count +'</b>');
 		 if(sum < count){
 		 	$(class_c).html("<img src=\"<?=base_url('assets/images/icons/confused.gif')?>\" title=\"Lagi Kalah!\">");
@@ -151,20 +152,20 @@ if($jobId != ''){
 </form>
 
 <script type="text/javascript">
-	var checkflag = "false";
-	function check(field) {
+	function check(field,sthis) {
+	var checkflag = sthis.value;
 	  if (checkflag == "false") {
 		 for (i = 0; i < field.length; i++) {
 		   field[i].checked = true;
 		 }
 		 checkflag = "true";
-		 return "Uncheck All";
+		 return checkflag;
 	  } else {
 		 for (i = 0; i < field.length; i++) {
 		   field[i].checked = false;
 		 }
 		 checkflag = "false";
-		 return "Check All";
+		 return checkflag;
 	  }
 	}
 </script>

@@ -117,7 +117,7 @@ if($jobId != ''){
 	  }
 	?>
 	<td class='td-kecil'><?php if(!isset($admin)) echo '
-		<input type="checkbox" onclick="this.value=check(this.form.line'.$o.')" />
+		<input type="checkbox" onclick="this.value=check(this.form.line'.$o.',this)" />
 		<a href="#" onclick="submit_form();"><i class="glyphicon glyphicon-pencil">Edit</i></a>';?></td>
 	<script type="text/javascript">
 	$(document).ready(function(){
@@ -152,20 +152,23 @@ if($jobId != ''){
 </form>
 
 <script type="text/javascript">
-	var checkflag = "false";
-	function check(field) {
+	var checkflag;
+	
+	function check(field,sthis) {
+	checkflag = sthis.value;
+	if(checkflag !== 'true')checkflag='false';
 	  if (checkflag == "false") {
 		 for (i = 0; i < field.length; i++) {
 		   field[i].checked = true;
 		 }
 		 checkflag = "true";
-		 return "Uncheck All";
+		 return checkflag;
 	  } else {
 		 for (i = 0; i < field.length; i++) {
 		   field[i].checked = false;
 		 }
 		 checkflag = "false";
-		 return "Check All";
+		 return checkflag;
 	  }
 	}
 </script>

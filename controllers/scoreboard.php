@@ -104,7 +104,7 @@ class Scoreboard extends CI_Controller {
 	function browse_job_result($scID=0){
 		$this->session->set_flashdata('last_url',$this->uri->uri_string());
 		$userId=$this->get_uId();
-		if($this->get_uRights() == 1)$data['admin']=true;
+		if($this->get_uRights() == 1){$data['admin']=true;$userId='';}
 		$data['job_res_datas']=$this->m->get_job_result($scID,$userId);
 		$data['uri']=$this->uri;
 		$this->header($data);

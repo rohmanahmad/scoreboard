@@ -153,11 +153,8 @@ class Score_board_model extends CI_Model{
  }
  
  function get_job_result($scID,$userId){
- 	$data=array(
- 		$this->pref('schedule.ID')=>$scID,
- 		$this->pref('targets.user_id')=>$userId
- 		);
- 	$this->db->where($data);
+ 	$this->db->where($this->pref('schedule.ID'),$scID);
+ 	if($userId!='')$this->db->where($this->pref('targets.user_id'),$userId);
  	$this->db->select(array(
  		$this->pref('job_result.ID as resId'),
  		$this->pref('job_result.url as url'),
@@ -175,7 +172,7 @@ class Score_board_model extends CI_Model{
  	$this->db->join($this->pref('targets'),
  				$this->pref('targets.ID').' = '.$this->pref('job.target_id'),
  				'left');
- 	$data=$this->db->get($this->pref('job'));
+ 	$data=$this->db->get($this->pref('joba'));
  	return $data->result();
  }
  
@@ -647,7 +644,7 @@ class Score_board_model extends CI_Model{
  function get_all_targets(){
  	$this->db->select(array($this->pref('targets.*'),'pengguna.username','pengguna.nama_lengkap'));
  	$this->db->join('pengguna','pengguna.ID = '.$this->pref('targets.user_id'),'left');
- 	$this->db->orderby();
+ 	$this->db->order_by($this->pref('targets.period_start'),'desc');
  	$q=$this->db->get($this->pref('targets'));
  	return $q->result();
  }

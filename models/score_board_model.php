@@ -153,11 +153,8 @@ class Score_board_model extends CI_Model{
  }
  
  function get_job_result($scID,$userId){
- 	$data=array(
- 		$this->pref('schedule.ID')=>$scID,
- 		$this->pref('targets.user_id')=>$userId
- 		);
- 	$this->db->where($data);
+ 	$this->db->where($this->pref('schedule.ID'),$scID);
+ 	if($userId!='')$this->db->where($this->pref('targets.user_id'),$userId);
  	$this->db->select(array(
  		$this->pref('job_result.ID as resId'),
  		$this->pref('job_result.url as url'),
