@@ -650,7 +650,7 @@ class Score_board_model extends CI_Model{
  }
 	
 	function admin_get_all_targets(){
-		$sql='
+		/*$sql='
 			SELECT 
 				`pengguna`.`nama_lengkap` as `pangguna`,'.
 				$this->pref('targets.target_name as t_name ,')
@@ -666,7 +666,7 @@ class Score_board_model extends CI_Model{
 			LEFT JOIN '.$this->pref('job_result').' ON '.$this->pref('job_result.schedule_id').' = '.$this->pref('schedule.ID').
 			'WHERE `pengguna`.`tgl_keluar`=0000-00-00 AND '.$this->pref('targets.status').' = 0
 		';
-		echo $sql;
+		echo $sql;*/
 	}
 
 }

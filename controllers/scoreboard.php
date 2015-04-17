@@ -62,8 +62,8 @@ class Scoreboard extends CI_Controller {
 	}
 	
 	function targets(){
-		$this->m->admin_get_all_targets();
-		exit;
+		/*$this->m->admin_get_all_targets();
+		exit;*/
 		$ur=$this->get_uRights();
 		$uId=$this->get_uId();
 		if($ur == 1){
