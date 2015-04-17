@@ -256,7 +256,7 @@ class Scoreboard extends CI_Controller {
 	}
 	
 	function add_job_result($scID=0){
-		$this->add_new_job_res();
+		$this->add_new_job_res($scID);
 		$userId=$this->get_uId();
 		$data['include_js'] = jquery_js_core() . 
 			'<script src="' .base_url(). 'assets/js/jquery-1.7.min.js"></script>';
@@ -270,9 +270,9 @@ class Scoreboard extends CI_Controller {
 		$this->load->view('footer',$data);
 	}
 	
-	function add_new_job_res(){
+	function add_new_job_res($sc_id){
 		if($_POST){
-			$sc_id=$this->flash()->flashdata('ID');
+			if(empty($sc_id))$sc_id=$this->flash()->flashdata('ID');
 			// URL CONTENT
 			if(!empty($_POST['content'])){
 				$this->process_add($sc_id);

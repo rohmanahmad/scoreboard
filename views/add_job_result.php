@@ -1,4 +1,4 @@
-<?=form_open_multipart()?>
+<?=form_open_multipart('scoreboard/add_job_result/'.$uri->segment(3))?>
 	<table class='table' style="width:60%;margin-left:20%">
 	<?php
 	$uId='';
