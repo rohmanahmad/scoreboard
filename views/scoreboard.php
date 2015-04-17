@@ -104,12 +104,13 @@ if($jobId != ''){
 		if($date==date('d/m')){$total_count=$t_count;$sum=$sum_;}
 		echo "<td class='td-kecil' style='font-size:".$fontsize."px;padding:0px;' bgcolor='".$bg."'>
 			<div class='row' style='margin-right: 0px;text-align:center;'>
-			  <div class='col-md-8' style='width:94%;float:right;background:#A8FF7D'>".
-			  form_checkbox(array('name'=>'check[]','value'=>$sc_id,'id'=>'line'.$o)).br().'<i>'.$count.'</i>' 
+			  <div class='col-md-8' style='width:94%;float:right;background:#A8FF7D'>";
+		  if(!isset($admin)) echo form_checkbox(array('name'=>'check[]','value'=>$sc_id,'id'=>'line'.$o)).br();
+		  echo '<b>'.$count.'</b>' 
 			  ."</div> 
 			  <div class='col-md-8' style='width:94%;float:right;background:#70C7B6'>".
 			  $total
-			  ."</div> 
+			  ."</div>
 			  ".anchor(site_url('scoreboard/browse_job_result/'.$sc_id),'View','class="col-md-8"')."
 			</div>
 		</td>";

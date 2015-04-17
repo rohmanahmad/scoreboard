@@ -648,6 +648,26 @@ class Score_board_model extends CI_Model{
  	$q=$this->db->get($this->pref('targets'));
  	return $q->result();
  }
+	
+	function admin_get_all_targets(){
+		$sql='
+			SELECT 
+				`pengguna`.`nama_lengkap` as `pangguna`,'.
+				$this->pref('targets.target_name as t_name ,')
+				$this->pref('targets.period_start as p_start ,')
+				$this->pref('targets.period_finish as p_finish ,')
+				$this->pref('schedule.count as jumlah ,')
+				$this->pref('job.job_name as jobname ,')
+				$this->pref('job_result.ID').
+			'FROM `pengguna`
+			LEFT JOIN '.$this->pref('targets').' ON '.$this->pref('targets.user_id').' = '.$this->pref('pengguna.ID').'
+			LEFT JOIN '.$this->pref('job').' ON '.$this->pref('job.target_id').' = '.$this->pref('targets.ID').'
+			LEFT JOIN '.$this->pref('schedule').' ON '.$this->pref('schedule.job_id').' = '.$this->pref('job.ID').'
+			LEFT JOIN '.$this->pref('job_result').' ON '.$this->pref('job_result.schedule_id').' = '.$this->pref('schedule.ID').
+			'WHERE `pengguna`.`tgl_keluar`=0000-00-00 AND '.$this->pref('targets.status').' = 0
+		';
+		echo $sql;
+	}
 
 }
 ?>
