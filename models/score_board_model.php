@@ -650,23 +650,38 @@ class Score_board_model extends CI_Model{
  }
 	
 	function admin_get_all_targets(){
-		/*$sql='
-			SELECT 
-				`pengguna`.`nama_lengkap` as `pangguna`,'.
-				$this->pref('targets.target_name as t_name ,')
-				$this->pref('targets.period_start as p_start ,')
-				$this->pref('targets.period_finish as p_finish ,')
-				$this->pref('schedule.count as jumlah ,')
-				$this->pref('job.job_name as jobname ,')
-				$this->pref('job_result.ID').
-			'FROM `pengguna`
-			LEFT JOIN '.$this->pref('targets').' ON '.$this->pref('targets.user_id').' = '.$this->pref('pengguna.ID').'
-			LEFT JOIN '.$this->pref('job').' ON '.$this->pref('job.target_id').' = '.$this->pref('targets.ID').'
-			LEFT JOIN '.$this->pref('schedule').' ON '.$this->pref('schedule.job_id').' = '.$this->pref('job.ID').'
-			LEFT JOIN '.$this->pref('job_result').' ON '.$this->pref('job_result.schedule_id').' = '.$this->pref('schedule.ID').
-			'WHERE `pengguna`.`tgl_keluar`=0000-00-00 AND '.$this->pref('targets.status').' = 0
-		';
-		echo $sql;*/
+		$sql='
+			SELECT *, (sum/count)*100 as percen
+			FROM(
+				SELECT ID, userId, pengguna, target_name, p_start, p_finish, jobname, SUM( jumlah ) AS count, SUM( count ) AS sum
+				FROM (
+
+					SELECT 
+						score_targets.ID AS ID,  
+						`pengguna`.`ID` AS  `userId` ,  
+						`pengguna`.`nama_lengkap` AS  `pengguna` , 
+						score_targets.target_name AS target_name, 
+						score_targets.period_start AS p_start, 
+						score_targets.period_finish AS p_finish, 
+						score_schedule.count AS jumlah, 
+						score_job.job_name AS jobname, 
+						COUNT( score_job_result.ID ) AS count
+					FROM  `pengguna` 
+					LEFT JOIN score_targets ON score_targets.user_id =  `pengguna`.`ID` 
+					LEFT JOIN score_job ON score_job.target_id = score_targets.ID
+					LEFT JOIN score_schedule ON score_schedule.job_id = score_job.ID
+					LEFT JOIN score_job_result ON score_job_result.schedule_id = score_schedule.ID
+					WHERE  `pengguna`.`tgl_keluar` =0000 -00 -00
+						AND score_targets.period_finish >= DATE( NOW( ) ) 
+					GROUP BY score_schedule.ID
+					)t1
+				GROUP BY userId
+			)t2
+			ORDER BY percen DESC
+			';
+		$q=$this->db->query($sql);
+		//print_r($q->result());
+		return $q->result();
 	}
 
 }
