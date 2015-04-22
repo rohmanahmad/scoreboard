@@ -3,7 +3,7 @@ if (!isset($result)) exit;
 ?>
 <table class='table' style='margin-left:auto;margin-right:auto;min-width:30%'>
  <tr>
-  <td class='td-head' colspan='6'>TARGETS</td>
+  <td class='td-head' colspan='5'>TARGETS</td>
  </tr>
  <?php
  if(isset($users)){
@@ -12,7 +12,7 @@ if (!isset($result)) exit;
  	}
  	echo form_open();
  	echo '<tr>
- 		<td colspan=3></td>
+ 		<td colspan=2></td>
  		<td colspan=2>By User : '.form_dropdown('userId',$data_user).' '.form_submit('','Filter').'</td>
  	</tr>';
  	echo form_close();
@@ -20,12 +20,9 @@ if (!isset($result)) exit;
  ?>
  <tr>
   <th class="td-kecil">No</th>
-  
   <?php
 	 if(isset($users)){
-  		echo '
-      <th class="td-kecil">Persentase</th>
-      <th class="td-kecil">Nama</th>';
+  		echo '<th class="td-kecil">Nama</th>';
   }
   ?>
   <th class="td-kecil">Periode</th>
@@ -36,19 +33,16 @@ if (!isset($result)) exit;
  $i=1;
   foreach($result as $r){
    $id=$r->ID;
-   $persen=ceil($r->percen);
-    if(empty($persen))$persen=0;
-   $period_start=$r->p_start;
-   $period_finish=$r->p_finish;
-   $target=$r->t_name;
+   $period_start=$r->period_start;
+   $period_finish=$r->period_finish;
+   $target=$r->target_name;
  ?>
  <tr>
   <td class="td-kecil"><?=$i?></td>
   <?php
 	 if(isset($users)){
-		$user_name=$r->pengguna;
-  		echo '<td class="td-kecil">'.$persen.' %</td>
-      <td class="td-kecil">'.$user_name.'</td>';
+		$user_name=$r->nama_lengkap;
+  		echo '<td class="td-kecil">'.$user_name.'</td>';
   }
   ?>
   <td class="td-kecil"><?php

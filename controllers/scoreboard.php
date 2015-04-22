@@ -61,19 +61,15 @@ class Scoreboard extends CI_Controller {
 		$this->load->view('footer',$data);
 	}
 	
-	function t(){
-		$this->m->admin_get_all_targets();
-		//exit;/**/
-	}
-	
 	function targets(){
+		/*$this->m->admin_get_all_targets();
+		exit;*/
 		$ur=$this->get_uRights();
 		$uId=$this->get_uId();
 		if($ur == 1){
 			$this->load->helper(array('my_date','form'));
 			$data['users']=$this->m->get_all_users();
-			$data['result']=$this->m->admin_get_all_targets();
-			//$data['result']=$this->m->filter_targets();
+			$data['result']=$this->m->filter_targets();
 			$data['admin']=true;
 		}else{
 			$data['result']=$this->m->getTargets($uId);
